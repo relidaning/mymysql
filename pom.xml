@@ -14,22 +14,11 @@
 	<name>mymysql</name>
 	<description>Demo for mysql.</description>
 	<packaging>jar</packaging>
+	
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -45,6 +34,12 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>xyz.lidaning</groupId>
+			<artifactId>lidaning-api</artifactId>
+		  <version>0.0.11</version>	
+		</dependency>
+		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

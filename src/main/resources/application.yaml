@@ -1,0 +1,33 @@
+server:
+  port=80
+
+---
+spring:
+  config:
+    activate:
+      on-profiles: prod
+  datasource:
+    url: jdbc:mysql://mysql:3306/mymysql
+    username: root
+    password: lidaning
+---
+spring:
+  config:
+    activate:
+      on-profiles: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/mymysql
+    username: root
+    password: lidaning
+---
+
+spring:
+  application:
+    name: mymysql
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: INFO
+    xyz.lidaning: DEBUG
