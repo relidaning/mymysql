@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: lidaning
+      MYSQL_DATABASE: mymysql
+    ports:
+      - 3306:3306
+    volumes:
+      - d:/apps/mymysql/data:/var/lib/mysql
+      - d:/apps/mymysql/conf:/etc/mysql/conf.d
+    restart: unless-stopped
+    
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    restart: unless-stopped  
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+
+  demo:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - mysql
