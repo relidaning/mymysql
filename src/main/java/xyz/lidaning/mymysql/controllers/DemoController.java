@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,8 +38,8 @@ public class DemoController {
     return JsonResult.success();
   }
 
-  @PostMapping("/insert1millionUsers")
-  public JsonResult insert1millionUsers() throws Exception{
+  @PostMapping("/insert1millionUsersv1")
+  public JsonResult insert1millionUsersv1() throws Exception{
     List<User> users = new ArrayList<>();
     for (int i = 0; i < 10000000; i++) {
       users.add(RandomObjectUtil.randomInstance(User.class));
@@ -55,4 +57,39 @@ public class DemoController {
         });
     return JsonResult.success();
   }
+
+  @PostMapping("/insert1millionUsersv2")
+  public JsonResult insert1millionUsersv2() throws Exception{
+    ExecutorService executorService = Executors.newFixedThreadPool(64);
+    for(int i=0;i<1000;i++){
+      executorService.execute(new Runnable() {
+        @Override
+        public void run() {
+          List<User> users = new ArrayList<>();
+          for (int i = 0; i < 10000; i++) {
+            try {
+              users.add(RandomObjectUtil.randomInstance(User.class));
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
+          }
+          jdbcTemplate.batchUpdate("INSERT INTO users (username, gender, birthday, age) " +
+          "VALUES (?, ?, ?, ?)",
+          users,
+          10000,
+          (PreparedStatement ps, User u) -> {
+            log.debug("user: {}", u);
+            ps.setString(1, u.getUsername());
+            ps.setString(2, u.getGender());
+            ps.setDate(3, new java.sql.Date(u.getBirthday().getTime()));
+            ps.setInt(4, u.getAge());
+          });
+        }
+      });
+    }
+    
+    return JsonResult.success();
+  }
+
+
 }

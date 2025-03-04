@@ -27,6 +27,6 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     ports:
-      - 80:80
+      - 80:81
     depends_on:
       - mysql

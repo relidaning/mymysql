@@ -1,0 +1,11 @@
+server:
+  port: 81
+
+spring:
+  config:
+    activate:
+      on-profiles: prod
+  datasource:
+    url: jdbc:mysql://mysql:3306/mymysql
+    username: root
+    password: lidaning
