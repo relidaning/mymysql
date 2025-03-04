@@ -1,15 +1,17 @@
 package xyz.lidaning.mymysql.controllers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -89,6 +91,22 @@ public class DemoController {
     }
     
     return JsonResult.success();
+  }
+
+  @GetMapping("/count")
+  public JsonResult count(){
+    long total=0l;
+    int count=0;
+    for(int i=0;i<10;i++){
+      long start = System.currentTimeMillis();
+      count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM users", Integer.class);
+      long end = System.currentTimeMillis();
+      total+=(end-start);
+    }
+    Map map=new HashMap();
+    map.put("count", count);
+    map.put("average_time", total/10000+"s");
+    return JsonResult.success(map);
   }
 
 
