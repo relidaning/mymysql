@@ -95,15 +95,15 @@ public class DemoController {
 
   @GetMapping("/count")
   public JsonResult count(){
+    long start = System.currentTimeMillis();
     long total=0l;
     int count=0;
     for(int i=0;i<10;i++){
-      long start = System.currentTimeMillis();
       count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM users", Integer.class);
-      long end = System.currentTimeMillis();
-      total+=(end-start);
     }
     Map map=new HashMap();
+    long end = System.currentTimeMillis();
+    total=(end-start);
     map.put("count", count);
     map.put("average_time", total/10000+"s");
     return JsonResult.success(map);
