@@ -2,8 +2,7 @@
 
 A demo for mysql.
 
-## Init a tabule Users
-
+## Init a Users table
 
 ## Insert 10Million users
 

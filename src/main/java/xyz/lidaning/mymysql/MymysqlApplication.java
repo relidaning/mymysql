@@ -9,5 +9,4 @@ public class MymysqlApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MymysqlApplication.class, args);
 	}
-
 }

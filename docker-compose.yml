@@ -20,11 +20,11 @@ services:
     depends_on:
       - mysql
 
-  demo:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    ports:
-      - 80:81
-    depends_on:
-      - mysql
+#  demo:
+#    build:
+#      context: .
+#      dockerfile: docker/Dockerfile
+#    ports:
+#      - 80:81
+#    depends_on:
+#      - mysql

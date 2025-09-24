@@ -9,7 +9,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 import xyz.lidaning.common.JsonResult;
 import xyz.lidaning.mymysql.domains.User;
+import xyz.lidaning.mymysql.mapper.repository.UserRepository;
 import xyz.lidaning.random.RandomObjectUtil;
 @Slf4j
 @RestController
@@ -96,18 +99,30 @@ public class DemoController {
   @GetMapping("/count")
   public JsonResult count(){
     long start = System.currentTimeMillis();
-    long total=0l;
-    int count=0;
-    for(int i=0;i<10;i++){
-      count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM users", Integer.class);
-    }
+    List result = jdbcTemplate.queryForList("SELECT gender, COUNT(1) nums FROM users group by gender");
     Map map=new HashMap();
     long end = System.currentTimeMillis();
-    total=(end-start);
-    map.put("count", count);
-    map.put("average_time", total/10000+"s");
+    long total=(end-start);
+    map.put("query costs: ", total/1000+"s");
+    map.put("result", result);
     return JsonResult.success(map);
   }
 
+  @Autowired
+  UserRepository userRepository;
+  @GetMapping("/insert2ES")
+  public JsonResult insert2ES(){
+
+    int pageSize = 10000; // Adjust batch size as needed
+    long totalRecords = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Long.class);
+    
+    for (int offset = 0; offset < totalRecords; offset += pageSize) {
+        String sql = "SELECT * FROM users LIMIT ? OFFSET ?";
+        List<User> users = jdbcTemplate.query(sql, new Object[]{pageSize, offset}, new BeanPropertyRowMapper<>(User.class));
+        userRepository.saveAll(users);
+        log.info("Inserted {} records from offset {}", users.size(), offset);
+    }
+    return JsonResult.success();
+  }
 
 }
