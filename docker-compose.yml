@@ -7,9 +7,9 @@ services:
       MYSQL_DATABASE: mymysql
     ports:
       - 3306:3306
-    volumes:
-      - d:/apps/mymysql/data:/var/lib/mysql
-      - d:/apps/mymysql/conf:/etc/mysql/conf.d
+#    volumes:
+#      - d:/apps/mymysql/data:/var/lib/mysql
+#      - d:/apps/mymysql/conf:/etc/mysql/conf.d
     
   adminer:
     image: adminer
