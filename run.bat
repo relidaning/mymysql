@@ -1,0 +1,1 @@
+java -jar target/app.jar --spring.profiles.active=dev 

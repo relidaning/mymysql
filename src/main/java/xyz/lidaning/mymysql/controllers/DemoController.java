@@ -29,6 +29,11 @@ public class DemoController {
   @Autowired
   JdbcTemplate jdbcTemplate;
 
+  @GetMapping("/")
+  public String index(){
+    return "index.html";
+  }
+
   @Transactional
   @PostMapping("/initTables")
   public JsonResult initTables(){

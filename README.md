@@ -1,15 +1,16 @@
 # MyMySQL
 
-A demo for mysql.
+A demo for mysql to test the performance of mysql in maga data.
 
-## Init a Users table
+## Steps
+- [x] Init a Users table
+- [x] Insert 10M users
+- [ ] Normal valocity for query
+- [ ] Valocity for optmized query
 
-## Insert 10Million users
-
-## Velocity for querying
-### Count
-1. Without keys: the average of query in 10 times is 9 seconds
-2. With PK:
+## Results
+- Without keys: the average of query in 10 times is 9 seconds
+- With PK: 
 ### TODO
       i. 前些天(23年春吧应该是), 某同事说到他们数据库达到了千万级别, 突然我就被震惊了, 没想到我们公司居然还有这种业务, 突然就来了兴趣, 问他他们关于这些是怎么处理的, 同时自己也开始思考这种情况下有什么策略能保证系统的高性能
       ii. 思来想去, 除了分库分表(关于分库分表本人也并未实操过), 也没想到行之有效的方法. 但是如果使用分库分表的逻辑, 那业务的底层逻辑就需要适配分库分表的逻辑, 改动太大; 并且他们这些都是业务数据, 不存在热点数据一说, 所以使用缓存redis之流的也没有效果
