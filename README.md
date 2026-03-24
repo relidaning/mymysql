@@ -28,5 +28,7 @@ docker-compose up -d
 - Add index: gender, group by it, 4s
 - The performance of querying over portioned table, is similar
 
+## Conclusion
+
 So, the optimization of querying over 10M data, is about 3s.
 Other than that, you should consider creating a table for your statistic if exact not required, or redis
