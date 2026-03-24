@@ -3,13 +3,10 @@ package xyz.lidaning.mymysql.domains;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import lombok.Data;
 import xyz.lidaning.random.Random;
 
 @Data
-@Document(indexName = "user", createIndex = true)
 public class User {
   private int id;
   @Random({"张三","李四","王五","赵六","钱七","孙八","周九","吴十"})

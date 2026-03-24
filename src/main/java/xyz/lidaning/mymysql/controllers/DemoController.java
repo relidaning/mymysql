@@ -12,31 +12,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import ch.qos.logback.core.model.Model;
 import lombok.extern.slf4j.Slf4j;
 import xyz.lidaning.common.JsonResult;
 import xyz.lidaning.mymysql.domains.User;
-import xyz.lidaning.mymysql.mapper.repository.UserRepository;
 import xyz.lidaning.random.RandomObjectUtil;
 @Slf4j
-@RestController
+@Controller
 public class DemoController {
 
   @Autowired
   JdbcTemplate jdbcTemplate;
 
   @GetMapping("/")
-  public String index(){
-    return "index.html";
+  public ModelAndView index(){
+    return new ModelAndView("index");
   }
 
   @Transactional
-  @PostMapping("/initTables")
-  public JsonResult initTables(){
+  @GetMapping("/initTables")
+  public ModelAndView initTables(ModelAndView model){
     jdbcTemplate.execute("DROP TABLE IF EXISTS users");
     jdbcTemplate.execute("CREATE TABLE users (\n" +
       "  id INT AUTO_INCREMENT PRIMARY KEY,\n" +
@@ -45,11 +47,12 @@ public class DemoController {
       "  birthday date ,\n" +
       "  age INT NOT NULL\n" +
       ")  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ;");
-    return JsonResult.success();
+    model.addObject("message", "Initialized users table.");
+    return index();
   }
 
-  @PostMapping("/insert1millionUsersv1")
-  public JsonResult insert1millionUsersv1() throws Exception{
+  @GetMapping("/insert1millionUsersv1")
+  public ModelAndView insert1millionUsersv1(ModelAndView model) throws Exception{
     List<User> users = new ArrayList<>();
     for (int i = 0; i < 10000000; i++) {
       users.add(RandomObjectUtil.randomInstance(User.class));
@@ -65,11 +68,12 @@ public class DemoController {
           ps.setDate(3, new java.sql.Date(u.getBirthday().getTime()));
           ps.setInt(4, u.getAge());
         });
-    return JsonResult.success();
+    model.addObject("message", "Inserted 10 million users.");
+    return index();
   }
 
-  @PostMapping("/insert1millionUsersv2")
-  public JsonResult insert1millionUsersv2() throws Exception{
+  @GetMapping("/insert1millionUsersv2")
+  public ModelAndView insert1millionUsersv2(ModelAndView model) throws Exception{
     ExecutorService executorService = Executors.newFixedThreadPool(64);
     for(int i=0;i<1000;i++){
       executorService.execute(new Runnable() {
@@ -97,28 +101,27 @@ public class DemoController {
         }
       });
     }
-    
-    return JsonResult.success();
+    model.addObject("message", "Inserted 10 million users.");
+    return index();
   }
 
   @GetMapping("/count")
-  public JsonResult count(){
+  public ModelAndView count(ModelAndView model){
     long start = System.currentTimeMillis();
     List result = jdbcTemplate.queryForList("SELECT gender, COUNT(1) nums FROM users group by gender");
     Map map=new HashMap();
     long end = System.currentTimeMillis();
     long total=(end-start);
-    map.put("query costs: ", total/1000+"s");
-    map.put("result", result);
-    return JsonResult.success(map);
+    model.addObject("message", "Costs: "+total/1000+"s, result: "+result.toString());
+    return index();
   }
 
-  @Autowired
-  UserRepository userRepository;
+  /* @Autowired
+  UserRepository userRepository; */
   @GetMapping("/insert2ES")
   public JsonResult insert2ES(){
 
-    int pageSize = 10000; // Adjust batch size as needed
+    /* int pageSize = 10000; // Adjust batch size as needed
     long totalRecords = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Long.class);
     
     for (int offset = 0; offset < totalRecords; offset += pageSize) {
@@ -126,8 +129,8 @@ public class DemoController {
         List<User> users = jdbcTemplate.query(sql, new Object[]{pageSize, offset}, new BeanPropertyRowMapper<>(User.class));
         userRepository.saveAll(users);
         log.info("Inserted {} records from offset {}", users.size(), offset);
-    }
-    return JsonResult.success();
+    }*/
+    return JsonResult.success(); 
   }
 
 }

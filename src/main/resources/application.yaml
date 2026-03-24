@@ -11,6 +11,9 @@ spring:
       maxLifetime: 1800000
       connectionTimeout: 300000
 
+  thymeleaf:
+    cache: false # 开发时关闭缓存，不然看不到实时页面
+
 
 logging:
   level:
