@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk
+FROM openjdk:17-ea-17-jdk-oracle
 WORKDIR /app
 ENV TZ=Asia/Shanghai
 EXPOSE 81

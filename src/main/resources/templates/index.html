@@ -1,18 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>My mysql!</h1>
-  <p><a href="/initTables">Init Users table.</a></p>
-  <p><a href="/insert1millionUsersv1">Insert 10M Users.</a></p>
-  <p><a href="/insert1millionUsersv2">Insert 10M Users (Optimized).</a></p>
-  <p><a href="/count">Query normally.</a></p>
-  <p><a href="/countOptimized">Query optimized.</a></p>
-  <p><a href="/reset">Reset.</a></p>
-  <p>{{message}}</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>My mysql!</h1>
+    <p><a href="#" onclick="javascript: initUsersTable()">Init Users table.</a></p>
+    <p><a href="#" onclick="javascript: insertUsersV1()">Insert 10M Users.</a></p>
+    <p><a href="#" onclick="javascript: insertUsersV2('users')">Insert 10M Users (Optimized).</a></p>
+    <p><a href="#" onclick="javascript: queryNormally()">Query.</a></p>
+    <p><a href="#" onclick="javascript: addIdxGender('users')">Add Index on Gender.</a></p>
+    <p><a href="#" onclick="javascript: queryNormally()">Query Again.</a></p>
+    <p><a href="#" onclick="javascript: initPortionedUserTbl()">Init Portioned User Table.</a></p>
+    <p><a href="#" onclick="javascript: insertUsersV2('usersv2')">Insert 10m Users into portioned Table.</a></p>
+    <p><a href="#" onclick="javascript: queryPortionedUsersInaSpecificDate()">Query Portioned Users in a Specific Date(Born in 1995).</a></p>
+    <p><a href="#" onclick="javascript: queryPortionedUsersAggregatedByGender()">Query Portioned Users Aggregated by Gender.</a></p>
+    <p><a href="#" onclick="javascript: addIdxGender('usersv2')">Add Index on Gender for Portioned Table.</a></p>
+    <p><a href="#" onclick="javascript: queryPortionedUsersAggregatedByGender()">Query Portioned Users by Gender, again.</a></p>
+    <div id="message">{{message}}</div>
+  </body>
+  <style>
+    #message {
+      display: none;
+    }
+  </style>
+  
+  <script>
+    function initUsersTable(){
+        fetch('/initUsersTable')
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    function insertUsersV1(){
+        fetch('/insert1millionUsersv1')
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    function insertUsersV2(table){
+        fetch('/insert1millionUsersv2/' + table)
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    function queryNormally(){
+        fetch('/count')
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    function addIdxGender(table){
+        fetch('/addIdxGender/' + table)
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    function initPortionedUserTbl(){
+        fetch('/initPortionedUserTbl')
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    function queryPortionedUsersInaSpecificDate(){
+        fetch('/queryPortionedUsersInaSpecificDate')
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+    function queryPortionedUsersAggregatedByGender(){
+        fetch('/queryPortionedUsersAggregatedByGender')
+          .then(response => response.text())
+          .then(data => {
+            const message = document.getElementById('message');
+            message.textContent = data;
+            message.style.display = 'block';
+          })
+          .catch(error => console.error('Error:', error));
+    }
+  </script>
 </html>
+
