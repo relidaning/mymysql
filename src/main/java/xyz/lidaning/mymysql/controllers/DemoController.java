@@ -34,9 +34,9 @@ public class DemoController {
   }
 
   @Transactional
-  @GetMapping("/initTables")
+  @GetMapping("/initUsersTable")
   @ResponseBody
-  public JsonResult initTables(ModelAndView model) {
+  public JsonResult initUsersTable(ModelAndView model) {
     jdbcTemplate.execute("DROP TABLE IF EXISTS users");
     jdbcTemplate.execute("CREATE TABLE users (\n" +
         "  id INT AUTO_INCREMENT PRIMARY KEY,\n" +

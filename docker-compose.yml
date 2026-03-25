@@ -8,8 +8,9 @@ services:
     ports:
       - 3306:3306
     volumes:
-#      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/data:/var/lib/mysql
       - ./docker/mysql/conf:/etc/mysql/conf.d
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     
   adminer:
     image: adminer
@@ -19,6 +20,39 @@ services:
       - TZ=Asia/Shanghai
     depends_on:
       - mysql
+      
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    ports:
+      - 9104:9104
+    volumes:
+      - ./docker/mysql-exporter/config.cnf:/etc/mysql/my.cnf:ro
+    command:
+      - "--config.my-cnf=/etc/mysql/my.cnf"
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - mysql-exporter
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - prometheus
 
   demo:
     build:
@@ -26,5 +60,7 @@ services:
       dockerfile: docker/demo/Dockerfile
     ports:
       - 81:81
+    environment:
+      - TZ=Asia/Shanghai
     depends_on:
       - mysql

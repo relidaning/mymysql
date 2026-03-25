@@ -38,3 +38,5 @@ logs/
 
 # mvn
 *.gz
+
+docker/mysql/data/
